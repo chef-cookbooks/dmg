@@ -20,17 +20,10 @@
 def load_current_resource
   @dmgpkg = Chef::Resource::DmgPackage.new(new_resource.name)
   @dmgpkg.app(new_resource.app)
-  Chef::Log.debug("Checking for application #{new_resource.app}")
-  if new_resource.installed_resource
-    installed = ::File.exist?(new_resource.installed_resource)
-  else
-    installed = ::File.directory?("#{new_resource.destination}/#{new_resource.app}.app")
-  end
-  @dmgpkg.installed(installed)
 end
 
 action :install do
-  unless @dmgpkg.installed
+  unless new_resource.installed?
 
     volumes_dir = new_resource.volumes_dir ? new_resource.volumes_dir : new_resource.app
     dmg_name = new_resource.dmg_name ? new_resource.dmg_name : new_resource.app
