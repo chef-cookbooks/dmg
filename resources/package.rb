@@ -22,7 +22,7 @@ require 'chef/shell_out'
 actions :install
 
 attribute :app, :kind_of => String, :name_attribute => true
-attribute :package_id, :kind_of => String, :default => nil
+attribute :package_id, :kind_of => [ Array, String ], :default => nil
 attribute :source, :kind_of => String, :default => nil
 attribute :destination, :kind_of => String, :default => "/Applications"
 attribute :checksum, :kind_of => String, :default => nil
@@ -46,13 +46,20 @@ def installed?
   case type
   when "pkg", "mpkg"
     Chef::Log.debug("[DMG] Checking for installed #{type}: #{package_id}")
+    
+    return false if package_id.nil? || package_id.empty?
 
     result = Chef::ShellOut.new("pkgutil --pkgs", :env => nil).run_command
     pkg_ids = result.stdout.split("\n")
 
     return false if pkg_ids.empty?
 
-    pkg_ids.include?(package_id)
+    case package_id
+    when String
+      pkg_ids.include?(package_id)
+    when Array
+      (pkg_ids & package_id) == package_id
+    end
   when "app"
     Chef::Log.debug("[DMG] Checking for installed application: #{app}")
     ::File.directory?("#{destination}/#{app}.app")
