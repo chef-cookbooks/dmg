@@ -21,12 +21,7 @@ def load_current_resource
   @dmgpkg = Chef::Resource::DmgPackage.new(new_resource.name)
   @dmgpkg.app(new_resource.app)
   Chef::Log.debug("Checking for application #{new_resource.app}")
-  if new_resource.installed_resource
-    installed = ::File.exist?(new_resource.installed_resource)
-  else
-    installed = ::File.directory?("#{new_resource.destination}/#{new_resource.app}.app")
-  end
-  @dmgpkg.installed(installed)
+  @dmgpkg.installed(installed?)
 end
 
 action :install do
@@ -50,8 +45,8 @@ action :install do
     case new_resource.type
     when "app"
       execute "cp -R '/Volumes/#{volumes_dir}/#{new_resource.app}.app' '#{new_resource.destination}'"
-    when "mpkg"
-      execute "sudo installer -pkg /Volumes/#{volumes_dir}/#{new_resource.app}.mpkg -target /"
+    when "mpkg", "pkg"
+      execute "sudo installer -pkg /Volumes/#{volumes_dir}/#{new_resource.app}.#{new_resource.type} -target /"
     end
 
     execute "hdiutil detach '/Volumes/#{volumes_dir}'"
@@ -62,6 +57,13 @@ action :install do
         ignore_failure true
       end
     end
-
   end
 end
+
+private
+
+def installed?
+  ::File.directory?("#{new_resource.destination}/#{new_resource.app}.app") ||
+    system("pkgutil --pkgs=#{new_resource.package_id}")
+end
+
