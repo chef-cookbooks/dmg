@@ -20,7 +20,7 @@ This resource will install a DMG "Package". It will retrieve the DMG from a remo
 
     knife exec -E 'p Chef::Config[:file_cache_path]' -c /etc/chef/client.rb
 
-Optionally, the LWRP can install an "mpkg" package using installer(8).
+Optionally, the LWRP can install an "mpkg" or "pkg" package using installer(8).
 
 # Actions:
 
@@ -32,8 +32,9 @@ Optionally, the LWRP can install an "mpkg" package using installer(8).
 * `source` - remote URL for the dmg to download if specified. Default is nil.
 * `destination` - directory to copy the .app into. Default is /Applications.
 * `checksum` - sha256 checksum of the dmg to download. Default is nil.
-* `type` - type of package, "app" or "mpkg". Default is "app". When using "mpkg", the destination must be /Applications.
+* `type` - type of package, "app", "pkg" or "mpkg". Default is "app". When using "pkg" or "mpkg", the destination must be /Applications.
 * `volumes_dir` - Directory under /Volumes where the dmg is mounted. Not all dmgs are mounted into a /Volumes location matching the name of the dmg. If not specified, this will use the name attribute.
+* `package_id` - Package id registered with pkgutil when a pkg or mpkg is installed
 * `dmg_name` - Specify the name of the dmg if it is not the same as `app`, or if the name has spaces.
 
 Usage Examples
@@ -79,6 +80,15 @@ Install Virtualbox to `/Applications` from the .mpkg:
     dmg_package "Virtualbox" do
       source "http://dlc.sun.com.edgesuite.net/virtualbox/4.0.8/VirtualBox-4.0.8-71778-OSX.dmg"
       type "mpkg"
+    end
+
+Install Silverlight, with idempotence check based on pkgutil:
+
+    dmg_package "Silerlight" do
+      source "http://silverlight.dlservice.microsoft.com/download/D/C/2/DC2D5838-9138-4D25-AA92-52F61F7C51E6/runtime/Silverlight.dmg"
+      type "pkg"
+      checksum "6d4a0ad4552d9815531463eb3f467fb8cf4bffcc"
+      package_id "com.microsoft.installSilverlightPlugin"
     end
 
 To do
