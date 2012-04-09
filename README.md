@@ -20,7 +20,7 @@ This resource will install a DMG "Package". It will retrieve the DMG from a remo
 
     knife exec -E 'p Chef::Config[:file_cache_path]' -c /etc/chef/client.rb
 
-Optionally, the LWRP can install an "mpkg" package using installer(8).
+Optionally, the LWRP can install an "mpkg" or "pkg" package using installer(8).
 
 # Actions:
 
@@ -32,9 +32,10 @@ Optionally, the LWRP can install an "mpkg" package using installer(8).
 * `source` - remote URL for the dmg to download if specified. Default is nil.
 * `destination` - directory to copy the .app into. Default is /Applications.
 * `checksum` - sha256 checksum of the dmg to download. Default is nil.
-* `type` - type of package, "app" or "mpkg". Default is "app". When using "mpkg", the destination must be /Applications.
+* `type` - type of package, "app", "mpkg", or "pkg". Default is "app". When using "mpkg" or "pkg", the destination must be /Applications.
 * `volumes_dir` - Directory under /Volumes where the dmg is mounted. Not all dmgs are mounted into a /Volumes location matching the name of the dmg. If not specified, this will use the name attribute.
 * `dmg_name` - Specify the name of the dmg if it is not the same as `app`, or if the name has spaces.
+* `package_id` - Package ID or an array Package IDs for the package being installed. This is the identifier for the package reported by pkgutil. This attribute is only used if you specified a `type` of "mpkg" or "pkg"
 
 Usage Examples
 ==============
