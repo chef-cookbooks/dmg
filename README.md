@@ -36,6 +36,8 @@ Optionally, the LWRP can install an "mpkg" or "pkg" package using installer(8).
 * `volumes_dir` - Directory under /Volumes where the dmg is mounted. Not all dmgs are mounted into a /Volumes location matching the name of the dmg. If not specified, this will use the name attribute.
 * `package_id` - Package id registered with pkgutil when a pkg or mpkg is installed
 * `dmg_name` - Specify the name of the dmg if it is not the same as `app`, or if the name has spaces.
+* `dmg_passphrase` - Specify a passphrase to use to unencrypt the dmg while mounting.
+* `accept_eula` - Specify whether to accept the EULA.  Certain dmgs require acceptance of EULA before mounting.  Can be true or false, defaults to false.
 
 Usage Examples
 ==============
@@ -82,6 +84,22 @@ Install Virtualbox to `/Applications` from the .mpkg:
       type "mpkg"
     end
 
+Install pgAdmin to `/Applications` and automatically accept the EULA:
+
+    pivotal_workstation_package "pgAdmin3" do
+      source "http://wwwmaster.postgresql.org/redir/198/h/pgadmin3/release/v1.12.3/osx/pgadmin3-1.12.3.dmg"
+      checksum "9435f79d5b52d0febeddfad392adf82db9df159196f496c1ab139a6957242ce9"
+      accept_eula true
+    end
+
+Install Pivotal Tracker to `/Applications` using a password-protected dmg:
+
+    pivotal_workstation_package "Pivotal Tracker" do
+      volumes_dir "tracker"
+      source "http://cheffiles.pivotallabs.com/fluid_tracker.dmg"
+      dmg_passphrase  "xyz"
+    end
+
 Install Silverlight, with idempotence check based on pkgutil:
 
     dmg_package "Silerlight" do
@@ -120,3 +138,4 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
+limitations under the License.
