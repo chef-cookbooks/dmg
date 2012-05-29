@@ -1,3 +1,7 @@
+## v1.0.0:
+
+* [COOK-852] - Support "pkg" in addition to "mpkg" package types
+
 ## v0.7.0:
 
 * [COOK-854] - use `cp -R` instead of `cp -r`
