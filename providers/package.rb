@@ -51,7 +51,7 @@ action :install do
 
     case new_resource.type
     when "app"
-      "rsync --recursive --links --perms --executability --owner --group --times '/Volumes/#{volumes_dir}/#{new_resource.app}.app' '#{new_resource.destination}'" do
+      execute "rsync --recursive --links --perms --executability --owner --group --times '/Volumes/#{volumes_dir}/#{new_resource.app}.app' '#{new_resource.destination}'" do
         user new_resource.owner if new_resource.owner
       end
 
