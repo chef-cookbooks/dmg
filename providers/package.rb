@@ -67,7 +67,7 @@ action :install do
       end
     end
 
-    execute "hdiutil detach '/Volumes/#{volumes_dir}'"
+    execute "hdiutil detach '/Volumes/#{volumes_dir}' || hdiutil detach '/Volumes/#{volumes_dir}' -force"
   end
 end
 
