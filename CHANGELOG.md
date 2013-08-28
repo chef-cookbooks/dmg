@@ -3,6 +3,11 @@ dmg Cookbook CHANGELOG
 This file is used to list changes made in each version of the dmg ookbook.
 
 
+v2.0.0
+------
+### Bug
+- **[COOK-3389](https://tickets.opscode.com/browse/COOK-3389)** - Use `rsync` instead of `cp` (potentially a breaking change on some systems)
+
 v1.1.0
 ------
 - [COOK-1847] - accept owner parameter for installing packages
