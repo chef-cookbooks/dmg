@@ -27,7 +27,6 @@ end
 action :install do
   unless @dmgpkg.installed
 
-    osx_majorver = node['platform_version'].split('.')[0,2].join()
     volumes_dir = new_resource.volumes_dir ? new_resource.volumes_dir : new_resource.app
     dmg_name = new_resource.dmg_name ? new_resource.dmg_name : new_resource.app
     dmg_file = "#{Chef::Config[:file_cache_path]}/#{dmg_name}.dmg"
@@ -63,7 +62,7 @@ action :install do
     when "mpkg", "pkg"
       execute "sudo installer -pkg '/Volumes/#{volumes_dir}/#{new_resource.app}.#{new_resource.type}' -target /" do
         # Prevent cfprefsd from holding up hdiutil detach for certain disk images
-        environment( {'__CFPREFERENCES_AVOID_DAEMON' => '1'} ) if osx_majorver.to_i >= 108
+        environment( {'__CFPREFERENCES_AVOID_DAEMON' => '1'} ) if Chef::Version::Platform.new(node['platform_version']) >= Chef::Version::Platform.new("10.8")
       end
     end
 
