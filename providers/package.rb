@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-use_inline_resources
+use_inline_resources if defined?(use_inline_resources)
 
 def load_current_resource
   @dmgpkg = Chef::Resource::DmgPackage.new(new_resource.name)
