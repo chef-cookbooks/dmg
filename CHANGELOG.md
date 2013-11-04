@@ -3,6 +3,11 @@ dmg Cookbook CHANGELOG
 This file is used to list changes made in each version of the dmg ookbook.
 
 
+v2.0.8
+------
+Adding a Chef 10 compatibility check in provider
+
+
 v2.0.6
 ------
 # BUG
