@@ -3,6 +3,11 @@ dmg Cookbook CHANGELOG
 This file is used to list changes made in each version of the dmg ookbook.
 
 
+v2.1.2
+------
+Cleaning up merge errors
+
+
 v2.1.0
 ------
 ### Bug
