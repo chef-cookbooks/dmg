@@ -36,6 +36,7 @@ Optionally, the LWRP can install an "mpkg" or "pkg" package using installer(8).
 - `dmg_name` - Specify the name of the dmg if it is not the same as `app`, or if the name has spaces.
 - `dmg_passphrase` - Specify a passphrase to use to unencrypt the dmg while mounting.
 - `accept_eula` - Specify whether to accept the EULA.  Certain dmgs require acceptance of EULA before mounting.  Can be true or false, defaults to false.
+- `headers` - Allows custom HTTP headers (like cookies) to be set on the remote_file resource.
 
 #### Examples
 Install `/Applications/Tunnelblick.app` from the primary download site.
