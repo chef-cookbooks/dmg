@@ -1,6 +1,10 @@
 dmg Cookbook CHANGELOG
 ======================
-This file is used to list changes made in each version of the dmg ookbook.
+This file is used to list changes made in each version of the dmg cookbook.
+
+v2.3.0 (2014-05-06)
+-------------------
+- [COOK-4623] Add 'headers' to remote_file resource
 
 
 v2.2.0 (2014-02-25)
