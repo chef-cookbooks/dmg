@@ -18,4 +18,3 @@
 #
 default['dmg']['base_dir'] = '/Applications'
 default['dmg']['cache_dir'] = Chef::Config[:file_cache_path]
-
