@@ -1,0 +1,18 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: macosx-10.9
+
+suites:
+  - name: default
+    run_list:
+      - recipe[dmg]
+  - name: package_install
+    run_list:
+      - recipe[dmg_test]
+    attributes:
