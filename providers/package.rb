@@ -26,10 +26,13 @@ def load_current_resource
   @dmgpkg.app(new_resource.app)
   Chef::Log.debug("Checking for application #{new_resource.app}")
   @dmgpkg.installed(installed?)
+  Chef::Log.debug("Got #{new_resource.app} installed status: #{@dmgpkg.installed}")
+  @dmgpkg.version(installed_version?)
+  Chef::Log.debug("Got #{new_resource.app} installed version: #{@dmgpkg.version}")
 end
 
 action :install do
-  unless @dmgpkg.installed
+  unless @dmgpkg.installed && !need_to_reinstall?
 
     volumes_dir = new_resource.volumes_dir ? new_resource.volumes_dir : new_resource.app
     dmg_name = new_resource.dmg_name ? new_resource.dmg_name : new_resource.app
@@ -57,6 +60,8 @@ action :install do
 
     case new_resource.type
     when 'app'
+      fail 'Version attributes not allowed on "app"-type packages' if new_resource.version
+
       execute "rsync --force --recursive --links --perms --executability --owner --group --times '/Volumes/#{volumes_dir}/#{new_resource.app}.app' '#{new_resource.destination}'" do
         user new_resource.owner if new_resource.owner
       end
@@ -79,13 +84,37 @@ end
 private
 
 def installed?
-  if ::File.directory?("#{new_resource.destination}/#{new_resource.app}.app")
+  if pkg_dir_exist?
     Chef::Log.info "Already installed; to upgrade, remove \"#{new_resource.destination}/#{new_resource.app}.app\""
     true
-  elsif shell_out("pkgutil --pkgs='#{new_resource.package_id}'").exitstatus == 0
+  elsif pkg_in_pkgutil?
     Chef::Log.info "Already installed; to upgrade, try \"sudo pkgutil --forget '#{new_resource.package_id}'\""
     true
   else
     false
   end
+end
+
+def need_to_reinstall?
+  if new_resource.version && @dmgpkg.version && new_resource.version != @dmgpkg.version
+    Chef::Log.info "New #{new_resource.app} version #{new_resource.version} does not match installed #{@dmgpkg.version}; need to reinstall"
+    true
+  else
+    false
+  end
+end
+
+def installed_version?
+  return nil unless pkg_in_pkgutil?
+  shell_out("pkgutil --pkg-info #{new_resource.package_id}").stdout.each_line do |l|
+    return l.split[1] if l.split[0] == 'version:'
+  end
+end
+
+def pkg_dir_exist?
+  ::File.directory?("#{new_resource.destination}/#{new_resource.app}.app")
+end
+
+def pkg_in_pkgutil?
+  shell_out("pkgutil --pkgs='#{new_resource.package_id}'").exitstatus == 0
 end

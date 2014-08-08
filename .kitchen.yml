@@ -14,5 +14,9 @@ suites:
       - recipe[dmg]
   - name: package_install
     run_list:
-      - recipe[dmg_test]
+      - recipe[dmg_test::package_install]
+    attributes:
+  - name: package_upgrade
+    run_list:
+      - recipe[dmg_test::package_upgrade]
     attributes:

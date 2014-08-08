@@ -1,7 +1,7 @@
 # Encoding: utf-8
 #
 # Cookbook Name:: dmg_test
-# Recipe:: default
+# Recipe:: package_install
 #
 
 package_file = 'dummy-0.1.0-1.dmg'
