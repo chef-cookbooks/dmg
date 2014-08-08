@@ -20,3 +20,6 @@ suites:
     run_list:
       - recipe[dmg_test::package_upgrade]
     attributes:
+  - name: package_uninstall
+    run_list:
+      - recipe[dmg_test::package_remove]

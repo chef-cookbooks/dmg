@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-actions :install
+actions [:install, :remove]
 
 attribute :app, :kind_of => String, :name_attribute => true
 attribute :source, :kind_of => String, :default => nil

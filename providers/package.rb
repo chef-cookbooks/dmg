@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+require 'fileutils'
+
 include Chef::Mixin::ShellOut
 
 use_inline_resources if defined?(use_inline_resources)
@@ -32,7 +34,7 @@ def load_current_resource
 end
 
 action :install do
-  unless @dmgpkg.installed && !need_to_reinstall?
+  if !@dmgpkg.installed || need_to_reinstall?
 
     volumes_dir = new_resource.volumes_dir ? new_resource.volumes_dir : new_resource.app
     dmg_name = new_resource.dmg_name ? new_resource.dmg_name : new_resource.app
@@ -78,21 +80,69 @@ action :install do
     end
 
     execute "hdiutil detach '/Volumes/#{volumes_dir}' || hdiutil detach '/Volumes/#{volumes_dir}' -force"
+  else
+    case new_resource.type
+    when 'app'
+      Chef::Log.info "Already installed; to force an upgrade, remove \"#{new_resource.destination}/#{new_resource.app}.app\""
+    when 'mpkg', 'pkg'
+      Chef::Log.info "Already installed; to force an upgrade, try \"sudo pkgutil --forget '#{new_resource.package_id}'\""
+    end
+  end
+end
+
+action :remove do
+  return unless @dmgpkg.installed
+
+  case new_resource.type
+  when 'app'
+    dir = ::File.join(new_resource.destination, "#{new_resource.app}.app")
+    Chef::Log.info "Cleaning up package #{new_resource.app} dir #{dir}"
+
+    directory dir do
+      recursive true
+      action :delete
+    end
+  when 'mpkg', 'pkg'
+    to_delete = shell_out("pkgutil --files #{new_resource.package_id}").stdout.split("\n")
+    # We only care about files and dirs at the package's top level
+    to_delete.delete_if { |d| d.count('/') != 0 }
+
+    pkg_info = shell_out("pkgutil --pkg-info #{new_resource.package_id}").stdout.split("\n")
+    pkg_info = pkg_info.each_with_object({}) do |line, hsh|
+      hsh[line.split(':')[0].to_sym] = line.split(':')[1..-1].join(':').strip
+    end
+
+    root_dir = ::File.join(pkg_info[:volume], pkg_info[:location])
+
+    Chef::Log.info "Cleaning up directories owned by package #{new_resource.app}"
+    # Delete the items directly--hitting them one-by-one w/ Chef takes too long
+    # and pollutes the INFO log with too much junk for big packages
+    to_delete.map { |i| ::File.join(root_dir, i) }.each do |i|
+      if ::File.directory?(i)
+        Chef::Log.debug "Deleting directory #{i}"
+        FileUtils.remove_dir(i)
+      else
+        Chef::Log.debug "Deleting file #{i}"
+        ::File.delete(i)
+      end
+    end
+
+    if ::Dir.entries(root_dir).delete_if { |i| %w(. ..).include?(i) }.empty?
+      Chef::Log.debug "Deleting root directory #{root_dir}"
+      ::Dir.delete(root_dir)
+    end
+
+    Chef::Log.info "Forgetting package #{new_resource.package_id}"
+    execute "pkgutil --forget #{new_resource.package_id}"
+
+    Chef::Log.info "Any symlinks outside #{root_dir} must be deleted manually"
   end
 end
 
 private
 
 def installed?
-  if pkg_dir_exist?
-    Chef::Log.info "Already installed; to upgrade, remove \"#{new_resource.destination}/#{new_resource.app}.app\""
-    true
-  elsif pkg_in_pkgutil?
-    Chef::Log.info "Already installed; to upgrade, try \"sudo pkgutil --forget '#{new_resource.package_id}'\""
-    true
-  else
-    false
-  end
+  pkg_dir_exist? || pkg_in_pkgutil? ? true : false
 end
 
 def need_to_reinstall?

@@ -23,6 +23,7 @@ Optionally, the LWRP can install an "mpkg" or "pkg" package using installer(8).
 
 #### Actions
 - :install - Installs the application.
+- :remove - Uninstalls the application.
 
 #### Parameter attributes:
 - `app` - This is the name of the application used by default for the /Volumes directory and the .app directory copied to /Applications.
