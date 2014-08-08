@@ -4,7 +4,6 @@ require 'rubygems'
 require 'English'
 require 'bundler/setup'
 require 'rubocop/rake_task'
-require 'rspec/core/rake_task'
 require 'foodcritic'
 require 'kitchen/rake_tasks'
 
@@ -22,8 +21,6 @@ FoodCritic::Rake::LintTask.new do |f|
   f.options = { :fail_tags => %w(any) }
 end
 
-RSpec::Core::RakeTask.new(:spec)
-
 Kitchen::RakeTasks.new
 
-task :default => %w(rubocop cookbook_test foodcritic spec)
+task :default => %w(rubocop cookbook_test foodcritic)
