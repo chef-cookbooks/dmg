@@ -9,3 +9,7 @@ LineLength:
 
 HashSyntax:
   EnforcedStyle: hash_rockets
+
+SingleSpaceBeforeFirstArg:
+  Exclude:
+    - "**/metadata.rb"
