@@ -39,6 +39,7 @@ action :install do
       remote_file "#{dmg_file} - #{@dmgpkg.name}" do
         path dmg_file
         source new_resource.source
+        headers new_resource.headers if new_resource.headers
         checksum new_resource.checksum if new_resource.checksum
       end
     end
