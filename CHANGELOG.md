@@ -25,8 +25,8 @@ Cleaning up merge errors
 v2.1.0
 ------
 ### Bug
-- **[COOK-3946](https://tickets.opscode.com/browse/COOK-3946)** - Syntax error in resources/package.rb
-- **[COOK-2672](https://tickets.opscode.com/browse/COOK-2672)** - EULA for package is displayed instead accepted
+- **[COOK-3946](https://tickets.chef.io/browse/COOK-3946)** - Syntax error in resources/package.rb
+- **[COOK-2672](https://tickets.chef.io/browse/COOK-2672)** - EULA for package is displayed instead accepted
 
 
 v2.0.8
@@ -45,19 +45,19 @@ v2.0.6
 v2.0.4
 ------
 ### Bug
-- **[COOK-3331](https://tickets.opscode.com/browse/COOK-3331)** - Fix an issue where `dmg_package` with no source raises an exception
+- **[COOK-3331](https://tickets.chef.io/browse/COOK-3331)** - Fix an issue where `dmg_package` with no source raises an exception
 
 
 v2.0.2
 ------
 ### Bug
-- **[COOK-3578](https://tickets.opscode.com/browse/COOK-3578)** - Support `package_id`s with spaces
-- **[COOK-3302](https://tickets.opscode.com/browse/COOK-3302)** - Fix an issue where `hdiutil detach` fails due to `cfprefsd` running in the background
+- **[COOK-3578](https://tickets.chef.io/browse/COOK-3578)** - Support `package_id`s with spaces
+- **[COOK-3302](https://tickets.chef.io/browse/COOK-3302)** - Fix an issue where `hdiutil detach` fails due to `cfprefsd` running in the background
 
 v2.0.0
 ------
 ### Bug
-- **[COOK-3389](https://tickets.opscode.com/browse/COOK-3389)** - Use `rsync` instead of `cp` (potentially a breaking change on some systems)
+- **[COOK-3389](https://tickets.chef.io/browse/COOK-3389)** - Use `rsync` instead of `cp` (potentially a breaking change on some systems)
 
 v1.1.0
 ------

@@ -125,7 +125,7 @@ end
 
 License & Authors
 -----------------
-- Author:: Joshua Timberman (joshua@opscode.com)
+- Author:: Joshua Timberman (joshua@chef.io)
 
 ```text
 Copyright 2011, Joshua Timberman <cookbooks@housepub.org>
