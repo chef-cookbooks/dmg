@@ -22,7 +22,7 @@ include Chef::Mixin::ShellOut
 use_inline_resources if defined?(use_inline_resources)
 
 def load_current_resource
-  @dmgpkg = Chef::Resource::DmgPackage.new(new_resource.name)
+  @dmgpkg = Chef::Resource.resource_for_node(:dmg_package, node).new(new_resource.name)
   @dmgpkg.app(new_resource.app)
   Chef::Log.debug("Checking for application #{new_resource.app}")
   @dmgpkg.installed(installed?)
