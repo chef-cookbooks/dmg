@@ -54,7 +54,7 @@ action :install do
         software_license_agreement = cmd.exitstatus == 0
         raise "Requires EULA Acceptance; add 'accept_eula true' to package resource" if software_license_agreement && !new_resource.accept_eula
         accept_eula_cmd = new_resource.accept_eula ? 'echo Y | PAGER=true' : ''
-        shell_out!("#{accept_eula_cmd} hdiutil attach #{passphrase_cmd} '#{dmg_file}' -mountpoint '/Volumes/#{volumes_dir}' -quiet")
+        shell_out!("#{accept_eula_cmd} hdiutil attach #{passphrase_cmd} '#{dmg_file}' -mountpoint '/Volumes/#{volumes_dir}'")
       end
       not_if "hdiutil info #{passphrase_cmd} | grep -q 'image-path.*#{dmg_file}'"
     end
