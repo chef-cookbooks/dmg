@@ -86,7 +86,7 @@ def installed?
   if ::File.directory?("#{new_resource.destination}/#{new_resource.app}.app")
     Chef::Log.info "Already installed; to upgrade, remove \"#{new_resource.destination}/#{new_resource.app}.app\""
     true
-  elsif shell_out("pkgutil --pkgs='#{new_resource.package_id}'").exitstatus == 0
+  elsif shell_out("pkgutil --pkg-info '#{new_resource.package_id}'").exitstatus == 0
     Chef::Log.info "Already installed; to upgrade, try \"sudo pkgutil --forget '#{new_resource.package_id}'\""
     true
   else
